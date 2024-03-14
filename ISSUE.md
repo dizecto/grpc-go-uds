@@ -96,8 +96,9 @@ func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error
 ```
 GRPC_GO_LOG_SEVERITY_LEVEL: info
 GRPC_GO_LOG_VERBOSITY_LEVEL: 99
-GODEBUG: http2debug=2
 ```
+
+And if 'GODEBUG: http2debug=2' is present, delete it. When printing this debug log, no errors were observed to occur.
 
 ##### Clone the repositories and compile for Unix domain socket
 ```
