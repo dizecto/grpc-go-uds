@@ -6,7 +6,7 @@ filing an issue here.
 Please see the FAQ in our main README.md, then answer the questions below
 before submitting your issue.
 
-# Weird errors like "frame too large" and "PROTOCOL_ERROR" occurrred for unix domain socket on Windows
+# Errors like "frame too large" and "PROTOCOL_ERROR" occurred for unix domain socket on Windows
 
 ### What version of gRPC are you using?
 v1.62.1
@@ -43,28 +43,28 @@ Add dummy data to increase the message size
 Send a request infinitely not concurrently and add some logs
 ```
     // client.go
-	for {
-		for _, note := range notes {
-			if err := stream.Send(note); err != nil {
-				log.Fatalf("client.RouteChat: stream.Send(%v) failed: %v, outstanding: %d", note, err, outstanding)
-			}
+    for {
+        for _, note := range notes {
+            if err := stream.Send(note); err != nil {
+                log.Fatalf("client.RouteChat: stream.Send(%v) failed: %v, outstanding: %d", note, err, outstanding)
+            }
 
-			atomic.AddInt64(&sent, 1)
-			// current := atomic.AddInt64(&outstanding, 1)
-			atomic.AddInt64(&outstanding, 1)
-			if true {
-				if sent%10000 == 1 {
-					log.Printf("client.RouteChat: a lot of outstandings:  %4d, sent: %d, recv: %d", outstanding, sent, recv)
-				}
-				// time.Sleep(time.Microsecond)
-				if sent%10000 == 1 {
-					log.Printf("client.RouteChat: decreased outstandings: %4d, sent: %d, recv: %d", outstanding, sent, recv)
-				}
-			}
+            atomic.AddInt64(&sent, 1)
+            // current := atomic.AddInt64(&outstanding, 1)
+            atomic.AddInt64(&outstanding, 1)
+            if true {
+                if sent%10000 == 1 {
+                    log.Printf("client.RouteChat: a lot of outstandings:  %4d, sent: %d, recv: %d", outstanding, sent, recv)
+                }
+                // time.Sleep(time.Microsecond)
+                if sent%10000 == 1 {
+                    log.Printf("client.RouteChat: decreased outstandings: %4d, sent: %d, recv: %d", outstanding, sent, recv)
+                }
+            }
 
-			//<-recvc
-		}
-	}
+            //<-recvc
+        }
+    }
 
 ```
 
@@ -72,18 +72,18 @@ Response a received request as it is
 ```
 // server.go
 func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error {
-	for {
-		in, err := stream.Recv()
-		if err == io.EOF {
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		if err := stream.Send(in); err != nil {
-			return err
-		}
-	}
+    for {
+        in, err := stream.Recv()
+        if err == io.EOF {
+            return nil
+        }
+        if err != nil {
+            return err
+        }
+        if err := stream.Send(in); err != nil {
+            return err
+        }
+    }
 }
 ```
 
